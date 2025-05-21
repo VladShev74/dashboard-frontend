@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useClassStore } from '@/stores/classStorage'
 
-const { fitness_classes } = useClassStore()
+const { fitness_classes, fetchClasses } = useClassStore()
 
 const dayOrder: Record<string, number> = {
   Monday: 0,
@@ -23,6 +23,10 @@ const upcomingClasses = computed(() => {
       return a.time.localeCompare(b.time)
     })
     .slice(0, 5)
+})
+
+onMounted(() => {
+  fetchClasses()
 })
 </script>
 
@@ -54,18 +58,23 @@ const upcomingClasses = computed(() => {
       <section class="bg-white p-6 rounded shadow mb-6">
         <h3 class="text-lg font-semibold mb-4">Upcoming Classes</h3>
         <ul class="space-y-2">
-          <li
-            v-for="classItem in upcomingClasses"
-            :key="classItem.id"
-            class="bg-white p-4 rounded shadow flex justify-between items-center"
-          >
-            <div>
-              <p class="font-semibold text-gray-800">{{ classItem.name }}</p>
-              <p class="text-sm text-gray-500">
-                {{ classItem.day }} – {{ classItem.time }} – {{ classItem.trainer }}
-              </p>
-            </div>
-          </li>
+          <template v-if="upcomingClasses.length === 0">
+            <li class="text-gray-600 py-4 text-center">No data is available at the moment.</li>
+          </template>
+          <template v-else>
+            <li
+              v-for="classItem in upcomingClasses"
+              :key="classItem.id"
+              class="bg-white p-4 rounded shadow flex justify-between items-center"
+            >
+              <div>
+                <p class="font-semibold text-gray-800">{{ classItem.name }}</p>
+                <p class="text-sm text-gray-500">
+                  {{ classItem.day }} – {{ classItem.time }} – {{ classItem.trainer }}
+                </p>
+              </div>
+            </li>
+          </template>
         </ul>
       </section>
 
