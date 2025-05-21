@@ -1,0 +1,160 @@
+/* styles.css */
+
+body {
+  background-color: #f3f4f6; /* bg-gray-100 */
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #1f2937; /* bg-gray-800 */
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+header img {
+  display: block;
+  margin: 0 auto 0.5rem;
+  width: 6rem; /* w-24 */
+}
+
+nav {
+  background-color: #1f2937; /* bg-gray-800 */
+  color: white;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  padding: 1.5rem;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+section {
+  background-color: white;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  display: inline-block;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  font-weight: bold;
+  background-color: #e9d5ff; /* bg-purple-200 */
+  color: black;
+  text-align: center;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #fb923c; /* hover:bg-orange-400 */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+}
+
+thead {
+  background-color: #1f2937;
+  color: white;
+}
+
+footer {
+  background-color: #1f2937;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+details {
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+details summary {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+ul.list-disc {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+}

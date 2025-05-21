@@ -1,0 +1,105 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useClassStore } from '@/stores/classStorage'
+
+const { fitness_classes } = useClassStore()
+
+const dayOrder: Record<string, number> = {
+  Monday: 0,
+  Tuesday: 1,
+  Wednesday: 2,
+  Thursday: 3,
+  Friday: 4,
+  Saturday: 5,
+  Sunday: 6,
+}
+
+const upcomingClasses = computed(() => {
+  return [...fitness_classes]
+    .filter(c => c.day && c.time) // only valid entries
+    .sort((a, b) => {
+      const dayDiff = dayOrder[a.day] - dayOrder[b.day]
+      if (dayDiff !== 0) return dayDiff
+      return a.time.localeCompare(b.time)
+    })
+    .slice(0, 5)
+})
+</script>
+
+<template>
+  <div id="app">
+    <main class="p-6 max-w-4xl mx-auto">
+      <section class="bg-white p-6 rounded shadow mb-6">
+        <h3 class="text-lg font-semibold mb-4">Stats Overview</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white shadow rounded-lg p-4 text-center">
+            <p class="text-gray-500">Members</p>
+            <p class="text-2xl font-bold text-gray-800">128</p>
+          </div>
+          <div class="bg-white shadow rounded-lg p-4 text-center">
+            <p class="text-gray-500">Classes Today</p>
+            <p class="text-2xl font-bold text-gray-800">6</p>
+          </div>
+          <div class="bg-white shadow rounded-lg p-4 text-center">
+            <p class="text-gray-500">Active Plans</p>
+            <p class="text-2xl font-bold text-gray-800">72</p>
+          </div>
+          <div class="bg-white shadow rounded-lg p-4 text-center">
+            <p class="text-gray-500">Revenue This Month</p>
+            <p class="text-2xl font-bold text-gray-800">€4,200</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white p-6 rounded shadow mb-6">
+        <h3 class="text-lg font-semibold mb-4">Upcoming Classes</h3>
+        <ul class="space-y-2">
+          <li
+            v-for="classItem in upcomingClasses"
+            :key="classItem.id"
+            class="bg-white p-4 rounded shadow flex justify-between items-center"
+          >
+            <div>
+              <p class="font-semibold text-gray-800">{{ classItem.name }}</p>
+              <p class="text-sm text-gray-500">
+                {{ classItem.day }} – {{ classItem.time }} – {{ classItem.trainer }}
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="bg-white p-6 rounded shadow">
+        <h3 class="text-lg font-semibold mb-2">Management Tasks</h3>
+        <details class="mb-2 p-4 border border-gray-300 rounded">
+          <summary class="font-bold cursor-pointer">Weekly Tasks</summary>
+          <ul class="list-disc pl-6 mt-2">
+            <li>Review class schedule</li>
+            <li>Check trainer availability</li>
+          </ul>
+        </details>
+        <details class="mb-2 p-4 border border-gray-300 rounded">
+          <summary class="font-bold cursor-pointer">Monthly Tasks</summary>
+          <ul class="list-disc pl-6 mt-2">
+            <li>Update trainer availability</li>
+            <li>Review feedback from members</li>
+          </ul>
+        </details>
+        <details class="mb-2 p-4 border border-gray-300 rounded">
+          <summary class="font-bold cursor-pointer">Quarterly Tasks</summary>
+          <ul class="list-disc pl-6 mt-2">
+            <li>Introduce new fitness programs</li>
+            <li>Analyze class attendance trends</li>
+          </ul>
+        </details>
+        <details class="mb-2 p-4 border border-gray-300 rounded">
+          <summary class="font-bold cursor-pointer">Seasonal Tasks</summary>
+          <ul class="list-disc pl-6 mt-2">
+            <li>Promote health campaigns</li>
+            <li>Organize special fitness events</li>
+          </ul>
+        </details>
+      </section>
+    </main>
+  </div>
+</template>
