@@ -25,7 +25,7 @@ const classData = ref({
   day: '',
   trainer: '',
 })
-const editingClassId = ref<number | null>(null)
+const editingClassId = ref<string | null>(null)
 
 onMounted(() => {
   fetchClasses()
@@ -48,7 +48,7 @@ function handleClassEdit(classItem: FitnessClass) {
   editingClassId.value = id
 }
 
-async function handleClassDelete(id: number) {
+async function handleClassDelete(id: string) {
   await deleteClass(id)
 }
 </script>

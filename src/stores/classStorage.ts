@@ -5,11 +5,12 @@ import axios from 'axios'
 const API_URL = import.meta.env.VITE_API_URL
 
 export type FitnessClass = {
-  id: number
+  id: string
   name: string
   time: string
   day: string
   trainer: string
+  lastModified?: string
 }
 
 export const useClassStore = defineStore('classStore', () => {
@@ -22,6 +23,7 @@ export const useClassStore = defineStore('classStore', () => {
     error.value = null
     try {
       const response = await axios.get(`${API_URL}/classes`)
+      // Ensure the backend returns { classes: [...] } with id as string
       fitness_classes.value.splice(0, fitness_classes.value.length, ...response.data.classes)
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -47,7 +49,7 @@ export const useClassStore = defineStore('classStore', () => {
     }
   }
 
-  const editClass = async (id: number, updated: Omit<FitnessClass, 'id'>) => {
+  const editClass = async (id: string, updated: Omit<FitnessClass, 'id'>) => {
     try {
       await axios.put<FitnessClass>(`${API_URL}/classes/${id}`, updated)
       await fetchClasses()
@@ -61,7 +63,7 @@ export const useClassStore = defineStore('classStore', () => {
     }
   }
 
-  const deleteClass = async (id: number) => {
+  const deleteClass = async (id: string) => {
     try {
       await axios.delete(`${API_URL}/classes/${id}`)
       await fetchClasses()

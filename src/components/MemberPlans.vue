@@ -5,7 +5,7 @@ import axios from 'axios'
 const API_URL = import.meta.env.VITE_API_URL
 
 type MembershipPlan = {
-  id: number
+  id: string
   name: string
   duration: number
   price: number
@@ -13,8 +13,8 @@ type MembershipPlan = {
 
 const membership_plans = ref<MembershipPlan[]>([])
 
-const planData = ref<MembershipPlan>({ name: '', duration: 0, price: 0, id: 0 })
-const editingPlanId = ref<number | null>(null)
+const planData = ref<Omit<MembershipPlan, 'id'>>({ name: '', duration: 0, price: 0 })
+const editingPlanId = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
 
 async function fetchPlans() {
@@ -44,7 +44,7 @@ async function handlePlanSubmit() {
         price: planData.value.price,
       })
     }
-    planData.value = { name: '', duration: 0, price: 0, id: 0 }
+    planData.value = { name: '', duration: 0, price: 0 }
     editingPlanId.value = null
     await fetchPlans()
     errorMsg.value = null
@@ -55,11 +55,11 @@ async function handlePlanSubmit() {
 }
 
 function handlePlanEdit(plan: MembershipPlan) {
-  planData.value = { ...plan }
+  planData.value = { name: plan.name, duration: plan.duration, price: plan.price }
   editingPlanId.value = plan.id
 }
 
-async function handlePlanDelete(id: number) {
+async function handlePlanDelete(id: string) {
   try {
     await axios.delete(`${API_URL}/plan/${id}`)
     await fetchPlans()
