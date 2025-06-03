@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useClassStore } from '@/stores/classStorage'
+import axios from 'axios'
 
 const { fitness_classes, fetchClasses } = useClassStore()
+
+const membership_plans = ref<{ id: string; name: string; duration: number; price: number }[]>([])
+const API_URL = import.meta.env.VITE_API_URL
+
+async function fetchPlans() {
+  const res = await axios.get(`${API_URL}/plans`)
+  membership_plans.value = res.data.plans
+}
 
 const dayOrder: Record<string, number> = {
   Monday: 0,
@@ -14,9 +23,29 @@ const dayOrder: Record<string, number> = {
   Sunday: 6,
 }
 
+function getTodayWeekday(): string {
+  return [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ][new Date().getDay()]
+}
+
+const todayWeekday = computed(getTodayWeekday)
+
+const classesToday = computed(() =>
+  fitness_classes.filter(c => c.day === todayWeekday.value).length
+)
+
+const totalPlans = computed(() => membership_plans.value.length)
+
 const upcomingClasses = computed(() => {
   return [...fitness_classes]
-    .filter(c => c.day && c.time) // only valid entries
+    .filter(c => c.day && c.time)
     .sort((a, b) => {
       const dayDiff = dayOrder[a.day] - dayOrder[b.day]
       if (dayDiff !== 0) return dayDiff
@@ -25,8 +54,9 @@ const upcomingClasses = computed(() => {
     .slice(0, 5)
 })
 
-onMounted(() => {
-  fetchClasses()
+onMounted(async () => {
+  await fetchClasses()
+  await fetchPlans()
 })
 </script>
 
@@ -35,22 +65,14 @@ onMounted(() => {
     <main class="p-6 max-w-4xl mx-auto">
       <section class="bg-white p-6 rounded shadow mb-6">
         <h3 class="text-lg font-semibold mb-4">Stats Overview</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div class="bg-white shadow rounded-lg p-4 text-center">
-            <p class="text-gray-500">Members</p>
-            <p class="text-2xl font-bold text-gray-800">128</p>
-          </div>
-          <div class="bg-white shadow rounded-lg p-4 text-center">
-            <p class="text-gray-500">Classes Today</p>
-            <p class="text-2xl font-bold text-gray-800">6</p>
+            <p class="text-gray-500">Classes Today ({{ todayWeekday }})</p>
+            <p class="text-2xl font-bold text-gray-800">{{ classesToday }}</p>
           </div>
           <div class="bg-white shadow rounded-lg p-4 text-center">
             <p class="text-gray-500">Active Plans</p>
-            <p class="text-2xl font-bold text-gray-800">72</p>
-          </div>
-          <div class="bg-white shadow rounded-lg p-4 text-center">
-            <p class="text-gray-500">Revenue This Month</p>
-            <p class="text-2xl font-bold text-gray-800">€4,200</p>
+            <p class="text-2xl font-bold text-gray-800">{{ totalPlans }}</p>
           </div>
         </div>
       </section>
