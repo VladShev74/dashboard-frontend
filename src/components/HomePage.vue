@@ -14,13 +14,13 @@ async function fetchPlans() {
 }
 
 const dayOrder: Record<string, number> = {
-  Monday: 0,
-  Tuesday: 1,
-  Wednesday: 2,
-  Thursday: 3,
-  Friday: 4,
-  Saturday: 5,
-  Sunday: 6,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+  Sunday: 0, // Sunday as the last day for wrap-around logic
 }
 
 function getTodayWeekday(): string {
@@ -35,7 +35,13 @@ function getTodayWeekday(): string {
   ][new Date().getDay()]
 }
 
+function getCurrentTime(): string {
+  const now = new Date()
+  return now.toTimeString().slice(0, 5) // "HH:MM"
+}
+
 const todayWeekday = computed(getTodayWeekday)
+const currentTime = computed(getCurrentTime)
 
 const classesToday = computed(() =>
   fitness_classes.filter(c => c.day === todayWeekday.value).length
@@ -44,11 +50,31 @@ const classesToday = computed(() =>
 const totalPlans = computed(() => membership_plans.value.length)
 
 const upcomingClasses = computed(() => {
+  const today = todayWeekday.value
+  const now = currentTime.value
+
+  // Helper to get the day index for sorting (wrap-around)
+  function getDayIndex(day: string) {
+    const todayIdx = dayOrder[today]
+    const classIdx = dayOrder[day]
+    let diff = classIdx - todayIdx
+    if (diff < 0) diff += 7
+    return diff
+  }
+
+  // Filter and sort
   return [...fitness_classes]
-    .filter(c => c.day && c.time)
+    .filter(c => {
+      if (c.day === today) {
+        // Only show classes for today that haven't started yet
+        return c.time >= now
+      }
+      return true
+    })
     .sort((a, b) => {
-      const dayDiff = dayOrder[a.day] - dayOrder[b.day]
-      if (dayDiff !== 0) return dayDiff
+      const aDayIdx = getDayIndex(a.day)
+      const bDayIdx = getDayIndex(b.day)
+      if (aDayIdx !== bDayIdx) return aDayIdx - bDayIdx
       return a.time.localeCompare(b.time)
     })
     .slice(0, 5)
