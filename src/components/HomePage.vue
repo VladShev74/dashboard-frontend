@@ -2,16 +2,24 @@
 import { ref, computed, onMounted } from 'vue'
 import { useClassStore } from '@/stores/classStorage'
 import axios from 'axios'
+import { io } from 'socket.io-client'
 
 const { fitness_classes, fetchClasses } = useClassStore()
 
 const membership_plans = ref<{ id: string; name: string; duration: number; price: number }[]>([])
 const API_URL = import.meta.env.VITE_API_URL
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL
 
 async function fetchPlans() {
   const res = await axios.get(`${API_URL}/plans`)
   membership_plans.value = res.data.plans
 }
+
+const socket = io(SOCKET_URL)
+socket.off('plansUpdated')
+socket.on('plansUpdated', () => {
+  fetchPlans()
+})
 
 const dayOrder: Record<string, number> = {
   Monday: 1,

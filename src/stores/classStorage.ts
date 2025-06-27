@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { io } from 'socket.io-client'
+import { onMounted, onUnmounted, ref } from 'vue'
 import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL
 
 export type FitnessClass = {
   id: string
@@ -17,6 +19,19 @@ export const useClassStore = defineStore('classStore', () => {
   const fitness_classes = ref<FitnessClass[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
+
+  // ========= SOCKET.IO =========
+  const socket = io(SOCKET_URL)
+
+  onMounted(() => {
+    socket.on('classesUpdated', () => {
+      fetchClasses()
+    })
+  })
+
+  onUnmounted(() => {
+    socket.off('classesUpdated')
+  })
 
   const fetchClasses = async () => {
     loading.value = true

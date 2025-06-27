@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
+import { io } from 'socket.io-client'
 
 const API_URL = import.meta.env.VITE_API_URL
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL
 
 type MembershipPlan = {
   id: string
@@ -12,10 +14,16 @@ type MembershipPlan = {
 }
 
 const membership_plans = ref<MembershipPlan[]>([])
-
 const planData = ref<Omit<MembershipPlan, 'id'>>({ name: '', duration: 0, price: 0 })
 const editingPlanId = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
+
+// ========= SOCKET.IO =========
+const socket = io(SOCKET_URL)
+socket.off('plansUpdated')
+socket.on('plansUpdated', () => {
+  fetchPlans()
+})
 
 async function fetchPlans() {
   try {
