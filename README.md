@@ -42,6 +42,7 @@ It provides a modern, responsive interface for managing fitness classes and memb
    Create a `.env` file in the root directory and add your backend API URL (example):
    ```
    VITE_API_URL=http://localhost:3000/api
+   VITE_SOCKET_URL=http://localhost:3001
    ```
 
 4. **Run the development server**
