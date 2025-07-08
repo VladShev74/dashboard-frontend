@@ -1,6 +1,6 @@
 # Fitness Center Dashboard Frontend
 
-This is the frontend for the Fitness Center Dashboard, built with **Vue 3**, **Vite**, **Pinia**, and **Tailwind CSS**.  
+This is the frontend for the Fitness Center Dashboard, built with **Vue 3**, **Vite**, **Pinia**, and **Tailwind CSS**.
 It provides a modern, responsive interface for managing fitness classes and membership plans.
 
 ---
@@ -28,7 +28,7 @@ It provides a modern, responsive interface for managing fitness classes and memb
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/dashboard-frontend.git
+   git clone https://github.com/VladShev74/dashboard-frontend.git
    cd dashboard-frontend
    ```
 
