@@ -27,12 +27,14 @@ It provides a modern, responsive interface for managing fitness classes and memb
 ## Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/VladShev74/dashboard-frontend.git
    cd dashboard-frontend
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -40,12 +42,14 @@ It provides a modern, responsive interface for managing fitness classes and memb
 3. **Configure environment variables**
 
    Create a `.env` file in the root directory and add your backend API URL (example):
+
    ```
    VITE_API_URL=http://localhost:3000/api
    VITE_SOCKET_URL=http://localhost:3001
    ```
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -72,6 +76,7 @@ It provides a modern, responsive interface for managing fitness classes and memb
 ## Related
 
 - [dashboard-backend](https://github.com/VladShev74/dashboard-backend) — Node.js/Express/MongoDB backend for this app
+- [Deployed Project](https://fitness-center-dashboard.netlify.app/) — takes around 30-50 seconds to boot up after long inactivity due to free hosting plan
 
 ---
 
